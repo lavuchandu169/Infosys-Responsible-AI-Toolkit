@@ -55,6 +55,10 @@ This builds and starts: `admin`, `backend`, `explain`, `fairness`,
 `mfe`, and `shell`, plus a `mongo` container they all share.
 
 Notes:
+- This compose setup has not yet been verified against a real Docker daemon
+  (none was available while writing it) — please confirm
+  `docker compose build` and `docker compose up` both succeed and
+  file an issue with any problems found.
 - Several of these services (privacy, fairness, llm-benchmarking) pull
   in large ML dependencies (torch, transformers) — the first
   `--build` will take a while and use significant disk space.
