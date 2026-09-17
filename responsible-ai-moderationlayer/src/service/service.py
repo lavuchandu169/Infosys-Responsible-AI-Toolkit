@@ -1745,7 +1745,7 @@ class moderation:
                 endtime = time.time()
                 rt = endtime - starttime
                 dict_timecheck["translate"]=str(round(rt,3))+"s"
-            elif looks_like_hinglish(text):
+            elif translate is None and looks_like_hinglish(text):
                 print("Inside Hinglish Normalization")
                 starttime = time.time()
                 text = Translate.normalize_hinglish(text)

@@ -146,3 +146,20 @@ class TestModerationHinglishIntegration:
 
         mock_translate.normalize_hinglish.assert_not_called()
         mock_translate.azure_translate.assert_called_once()
+
+    def test_explicit_non_recognized_translate_value_also_skips_detection(self, monkeypatch):
+        # Any explicit translate= value (not just "google"/"azure") must be
+        # respected and skip automatic Hinglish detection — the spec's
+        # explicit non-goal is "no change to the existing opt-in translate
+        # flag's behavior when explicitly set by a caller."
+        payload = create_moderation_payload("kya haal hai")
+        mock_obj = create_mock_moderation_obj()
+        monkeypatch.setattr(svc, "looks_like_hinglish", lambda text: True)
+        monkeypatch.setattr(svc, "callModerationModels", lambda *a, **k: mock_obj)
+
+        mock_translate = MagicMock()
+        monkeypatch.setattr(svc, "Translate", mock_translate)
+
+        svc.moderation.completions(payload, {}, "gpt4", None, [], "no")
+
+        mock_translate.normalize_hinglish.assert_not_called()

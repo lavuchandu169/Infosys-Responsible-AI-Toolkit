@@ -87,3 +87,21 @@ class TestLooksLikeHinglish:
 
     def test_plain_english_sentence_not_flagged(self):
         assert looks_like_hinglish("The quick brown fox jumps over the lazy dog") is False
+
+    def test_does_not_flag_english_words_that_look_like_hindi_markers(self):
+        # Found during review: these words were previously in the marker
+        # list and caused false positives on ordinary English text.
+        english_homograph_samples = [
+            "Open a new tab in the browser",
+            "Press the tab key to indent",
+            "Use the tab character as the delimiter",
+            "That is a mere formality",
+            "Can you hum that tune for me",
+            "I keep koi fish in my pond",
+        ]
+        for sample in english_homograph_samples:
+            assert looks_like_hinglish(sample) is False, f"False positive on: {sample!r}"
+
+    def test_non_string_input_not_flagged(self):
+        assert looks_like_hinglish(["not", "a", "string"]) is False
+        assert looks_like_hinglish(12345) is False
